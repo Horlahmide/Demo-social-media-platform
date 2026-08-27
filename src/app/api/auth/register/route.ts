@@ -50,6 +50,7 @@ export async function POST(request: Request) {
       emailVerificationTokenHash: hashedToken,
       emailVerificationTokenExpires: verificationTokenExpires,
     });
+
     await sendVerificationEmail(email, verificationToken);
 
     return NextResponse.json(
