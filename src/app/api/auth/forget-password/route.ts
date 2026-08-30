@@ -19,7 +19,6 @@ export async function POST(request: Request) {
 
     const body = await request.json();
 
-
     const email = body.email?.trim().toLowerCase();
 
     if (!email) {
@@ -56,7 +55,6 @@ export async function POST(request: Request) {
     await user.save();
 
     await sendPasswordResetEmail(email, resetToken);
-    console.log("Reset token:", resetToken);
 
     return NextResponse.json({
       message:

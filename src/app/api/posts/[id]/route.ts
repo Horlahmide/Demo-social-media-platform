@@ -162,21 +162,24 @@ export async function PUT(
       const buffer = Buffer.from(arrayBuffer);
       const result = await uploadToCloudinary(buffer);
 
-      try {
-        post.imagePublicId = result.public_id;
-        post.imageUrl = result.secure_url;
+      post.imagePublicId = result.public_id;
+      post.imageUrl = result.secure_url;
 
+      try {
         await post.save();
       } catch (error) {
         await deleteFromCloudinary(result.public_id);
         throw error;
       }
 
-      // Delete the OLD image from Cloudinary
+      // Delete the OLD image from Cloudinary only after DB save succeeds
       if (oldPublicId) {
         await deleteFromCloudinary(oldPublicId);
       }
+    } else {
+      await post.save();
     }
+
 
     return NextResponse.json(
       {
